@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "axios": "^0.26.1",
-    "canvas2image": "^1.0.5"
+    "axios": "^0.26.1"
   }
 }
