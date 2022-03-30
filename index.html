@@ -12,8 +12,20 @@
   </style>
 </head>
 
+<style>
+  #container {
+    display: flex;
+    flex-direction: column;
+    grid-gap: 10px;
+  }
+
+  #container * {
+    flex-shrink: 0;
+  }
+</style>
+
 <body>
-  <div style="display: flex; flex-direction: column; grid-gap: 10px;">
+  <div id="container">
     <button id="create" style="height: 40px;">oluştur</button>
     <button id="save" style="height: 40px;">kaydet</button>
     <canvas id="canvas" width="1080" height="1920" style="border:1px solid #d3d3d3;"></canvas>
