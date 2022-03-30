@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+  </style>
+</head>
+
+<body>
+  <div style="display: flex; grid-column-gap: 10px;">
+    <canvas id="canvas" width="1080" height="1920" style="border:1px solid #d3d3d3;"></canvas>
+    <button id="create" style="height: 40px;">oluştur</button>
+    <button id="save" style="height: 40px;">kaydet</button>
+
+    <img id="bg" src="./bg.png" style="display: none;">
+  </div>
+
+  <script src="./node_modules/canvas2image/canvas2image.js"></script>
+  <script src="./node_modules/axios/dist/axios.js"></script>
+  <script>
+    // CoinAPI => 790321D5-4828-44F0-96AC-FA8A8E16AE58
+    // https://rest.coinapi.io/v1/assets?apikey=API_KEY
+
+    // ExchangeRates => 9f0b059124149ba980d87e0ad89ed33c
+    // http://api.exchangeratesapi.io/v1/latest?access_key=API_KEY&format=1
+
+    // YahooFinance => Dc3Lyy4TAW974zXQSC5ng3Spz8TCDMnp1XuEYsmN
+    // https://yfapi.net/v6/finance/quote?region=US&lang=en&symbols=
+
+    var options = {
+      method: 'GET',
+      url: "https://yfapi.net/v6/finance/quote?region=US&lang=en&symbols=EURTRY%3DX%2CUSDTRY%3DX%2CGBPTRY%3DX%2CASELS.IS%2CTHYAO.IS%2CSIRE%2CGC%3DF%2CSI%3DF%2CCL%3DF%2CXU100.IS%2C%5EGDAXI%2C%5EN225%2CBTC-USD%2CETH-USD%2CBNB-USD%2CEREGL.IS%2CTOASO.IS%2CSASA.IS",
+      accept: "application/json",
+      headers: {
+        'x-api-key': 'Dc3Lyy4TAW974zXQSC5ng3Spz8TCDMnp1XuEYsmN'
+      }
+    }
+
+    function getData() {
+      return axios.request(options).then((res) => {
+        return res.data.quoteResponse.result
+      }).catch((error) => {
+        alert("hata")
+        console.error(error)
+      })
+    }
+
+    var canvas = document.getElementById("canvas")
+    var ctx = canvas.getContext("2d")
+    var img = document.getElementById("bg")
+    ctx.drawImage(img, 0, 0)
+
+    var create = document.getElementById("create").addEventListener("click", () => {
+      getData().then(res => {
+
+        let EuroPrice = Number(res[0].regularMarketPrice).toFixed(2)
+        let EuroPercentage = "%" + Number(res[0].regularMarketChangePercent).toFixed(2).replace("-", "")
+        let EuroColor = res[0].regularMarketPreviousClose > res[0].regularMarketPrice ? "#f82e2e" : "#33ff54"
+
+        let DollarPrice = Number(res[1].regularMarketPrice).toFixed(2)
+        let DollarPercentage = "%" + Number(res[1].regularMarketChangePercent).toFixed(2).replace("-", "")
+        let DollarColor = res[1].regularMarketPreviousClose > res[1].regularMarketPrice ? "#f82e2e" : "#33ff54"
+
+        let SterlingPrice = Number(res[2].regularMarketPrice).toFixed(2)
+        let SterlingPercentage = "%" + Number(res[2].regularMarketChangePercent).toFixed(2).replace("-", "")
+        let SterlingColor = res[2].regularMarketPreviousClose > res[2].regularMarketPrice ? "#f82e2e" : "#33ff54"
+
+        let AselsanPrice = Number(res[3].regularMarketPrice).toFixed(2)
+        let AselsanPercentage = "%" + Number(res[3].regularMarketChangePercent).toFixed(2).replace("-", "")
+        let AselsanColor = res[3].regularMarketPreviousClose > res[3].regularMarketPrice ? "#f82e2e" : "#33ff54"
+
+        let THYPrice = Number(res[4].regularMarketPrice).toFixed(2)
+        let THYPercentage = "%" + Number(res[4].regularMarketChangePercent).toFixed(2).replace("-", "")
+        let THYColor = res[4].regularMarketPreviousClose > res[4].regularMarketPrice ? "#f82e2e" : "#33ff54"
+
+        let SisecamPrice = Number(res[5].regularMarketPrice).toFixed(2)
+        let SisecamPercentage = "%" + Number(res[5].regularMarketChangePercent).toFixed(2).replace("-", "")
+        let SisecamColor = res[5].regularMarketPreviousClose > res[5].regularMarketPrice ? "#f82e2e" : "#33ff54"
+
+        let GoldPrice = Number(res[6].regularMarketPrice).toFixed(2)
+        let GoldPercentage = "%" + Number(res[6].regularMarketChangePercent).toFixed(2).replace("-", "")
+        let GoldColor = res[6].regularMarketPreviousClose > res[6].regularMarketPrice ? "#f82e2e" : "#33ff54"
+
+        let SilverPrice = Number(res[7].regularMarketPrice).toFixed(2)
+        let SilverPercentage = "%" + Number(res[7].regularMarketChangePercent).toFixed(2).replace("-", "")
+        let SilverColor = res[7].regularMarketPreviousClose > res[7].regularMarketPrice ? "#f82e2e" : "#33ff54"
+
+        let CrudeOilPrice = Number(res[8].regularMarketPrice).toFixed(2)
+        let CrudeOilPercentage = "%" + Number(res[8].regularMarketChangePercent).toFixed(2).replace("-", "")
+        let CrudeOilColor = res[8].regularMarketPreviousClose > res[8].regularMarketPrice ? "#f82e2e" : "#33ff54"
+
+        let BIST100Price = Number(res[9].regularMarketPrice).toFixed(2)
+        let BIST100Percentage = "%" + Number(res[9].regularMarketChangePercent).toFixed(2).replace("-", "")
+        let BIST100Color = res[9].regularMarketPreviousClose > res[9].regularMarketPrice ? "#f82e2e" : "#33ff54"
+
+        let DAXPrice = Number(res[10].regularMarketPrice).toFixed(2)
+        let DAXPercentage = "%" + Number(res[10].regularMarketChangePercent).toFixed(2).replace("-", "")
+        let DAXColor = res[10].regularMarketPreviousClose > res[10].regularMarketPrice ? "#f82e2e" : "#33ff54"
+
+        let NikkeiPrice = Number(res[11].regularMarketPrice).toFixed(2)
+        let NikkeiPercentage = "%" + Number(res[11].regularMarketChangePercent).toFixed(2).replace("-", "")
+        let NikkeiColor = res[11].regularMarketPreviousClose > res[11].regularMarketPrice ? "#f82e2e" : "#33ff54"
+
+        let BitcoinPrice = Number(res[12].regularMarketPrice).toFixed(2)
+        let BitcoinPercentage = "%" + Number(res[12].regularMarketChangePercent).toFixed(2).replace("-", "")
+        let BitcoinColor = res[12].regularMarketPreviousClose > res[12].regularMarketPrice ? "#f82e2e" : "#33ff54"
+
+        let EthereumPrice = Number(res[13].regularMarketPrice).toFixed(2)
+        let EthereumPercentage = "%" + Number(res[13].regularMarketChangePercent).toFixed(2).replace("-", "")
+        let EthereumColor = res[13].regularMarketPreviousClose > res[13].regularMarketPrice ? "#f82e2e" : "#33ff54"
+
+        let BinancePrice = Number(res[14].regularMarketPrice).toFixed(2)
+        let BinancePercentage = "%" + Number(res[14].regularMarketChangePercent).toFixed(2).replace("-", "")
+        let BinanceColor = res[14].regularMarketPreviousClose > res[14].regularMarketPrice ? "#f82e2e" : "#33ff54"
+
+        let EregliPrice = Number(res[15].regularMarketPrice).toFixed(2)
+        let EregliPercentage = "%" + Number(res[15].regularMarketChangePercent).toFixed(2).replace("-", "")
+        let EregliColor = res[15].regularMarketPreviousClose > res[15].regularMarketPrice ? "#f82e2e" : "#33ff54"
+
+        let TOASAPrice = Number(res[16].regularMarketPrice).toFixed(2)
+        let TOASAPercentage = "%" + Number(res[16].regularMarketChangePercent).toFixed(2).replace("-", "")
+        let TOASAColor = res[16].regularMarketPreviousClose > res[16].regularMarketPrice ? "#f82e2e" : "#33ff54"
+
+        let SASAPrice = Number(res[17].regularMarketPrice).toFixed(2)
+        let SASAPercentage = "%" + Number(res[17].regularMarketChangePercent).toFixed(2).replace("-", "")
+        let SASAColor = res[17].regularMarketPreviousClose > res[17].regularMarketPrice ? "#f82e2e" : "#33ff54"
+
+        // ===============
+        // === PERCENTAGE
+        // ===============
+
+        ctx.fillStyle = "#ffffff"
+
+        // Euro
+        ctx.font = "26px Space Grotesk"
+        ctx.fillStyle = EuroColor
+        ctx.fillText(EuroPercentage, 295, 724)
+
+        // Dollar
+        ctx.font = "26px Space Grotesk"
+        ctx.fillStyle = DollarColor
+        ctx.fillText(DollarPercentage, 295, 772)
+
+        // Sterling
+        ctx.font = "26px Space Grotesk"
+        ctx.fillStyle = SterlingColor
+        ctx.fillText(SterlingPercentage, 295, 820)
+
+        // Aselsan
+        ctx.font = "26px Space Grotesk"
+        ctx.fillStyle = AselsanColor
+        ctx.fillText(AselsanPercentage, 295, 1050)
+
+        // THY
+        ctx.font = "26px Space Grotesk"
+        ctx.fillStyle = THYColor
+        ctx.fillText(THYPercentage, 295, 1098)
+
+        // Sisecam
+        ctx.font = "26px Space Grotesk"
+        ctx.fillStyle = SisecamColor
+        ctx.fillText(SisecamPercentage, 295, 1146)
+
+        // Gold
+        ctx.font = "26px Space Grotesk"
+        ctx.fillStyle = GoldColor
+        ctx.fillText(GoldPercentage, 253, 1376)
+
+        // Silver
+        ctx.font = "26px Space Grotesk"
+        ctx.fillStyle = SilverColor
+        ctx.fillText(SilverPercentage, 295, 1424)
+
+        // CrudeOil
+        ctx.font = "26px Space Grotesk"
+        ctx.fillStyle = CrudeOilColor
+        ctx.fillText(CrudeOilPercentage, 277, 1472)
+
+        // BIST100
+        ctx.font = "26px Space Grotesk"
+        ctx.fillStyle = BIST100Color
+        ctx.fillText(BIST100Percentage, 750, 724)
+
+        // DAX
+        ctx.font = "26px Space Grotesk"
+        ctx.fillStyle = DAXColor
+        ctx.fillText(DAXPercentage, 736, 772)
+
+        // Nikkei
+        ctx.font = "26px Space Grotesk"
+        ctx.fillStyle = NikkeiColor
+        ctx.fillText(NikkeiPercentage, 736, 820)
+
+        // Bitcoin
+        ctx.font = "26px Space Grotesk"
+        ctx.fillStyle = BitcoinColor
+        ctx.fillText(BitcoinPercentage, 732, 1050)
+
+        // Ethereum
+        ctx.font = "26px Space Grotesk"
+        ctx.fillStyle = EthereumColor
+        ctx.fillText(EthereumPercentage, 758, 1098)
+
+        // Binance
+        ctx.font = "26px Space Grotesk"
+        ctx.fillStyle = BinanceColor
+        ctx.fillText(BinancePercentage, 780, 1146)
+
+        // Eregli
+        ctx.font = "26px Space Grotesk"
+        ctx.fillStyle = EregliColor
+        ctx.fillText(EregliPercentage, 802, 1376)
+
+        // TOASA
+        ctx.font = "26px Space Grotesk"
+        ctx.fillStyle = TOASAColor
+        ctx.fillText(TOASAPercentage, 802, 1424)
+
+        // SASA
+        ctx.font = "26px Space Grotesk"
+        ctx.fillStyle = SASAColor
+        ctx.fillText(SASAPercentage, 802, 1472)
+
+        // ===============
+        // ======== PRICE
+        // ===============
+
+        ctx.fillStyle = "#ffffff"
+
+        // Euro
+        ctx.font = "40px Space Grotesk"
+        ctx.fillText(EuroPrice, 380, 724)
+
+        // Dollar
+        ctx.font = "40px Space Grotesk"
+        ctx.fillText(DollarPrice, 380, 772)
+
+        // Sterling
+        ctx.font = "40px Space Grotesk"
+        ctx.fillText(SterlingPrice, 380, 820)
+
+        // Aselsan
+        ctx.font = "40px Space Grotesk"
+        ctx.fillText(AselsanPrice, 380, 1050)
+
+        // THY
+        ctx.font = "40px Space Grotesk"
+        ctx.fillText(THYPrice, 380, 1098)
+
+        // Sisecam
+        ctx.font = "40px Space Grotesk"
+        ctx.fillText(SisecamPrice, 380, 1146)
+
+        // Gold
+        ctx.font = "40px Space Grotesk"
+        ctx.fillText(GoldPrice, 338, 1376)
+
+        // Silver
+        ctx.font = "40px Space Grotesk"
+        ctx.fillText(SilverPrice, 380, 1424)
+
+        // CrudeOil
+        ctx.font = "40px Space Grotesk"
+        ctx.fillText(CrudeOilPrice, 363, 1472)
+
+        // BIST100
+        ctx.font = "40px Space Grotesk"
+        ctx.fillText(BIST100Price, 840, 724)
+
+        // DAX
+        ctx.font = "40px Space Grotesk"
+        ctx.fillText(DAXPrice, 817, 772)
+
+        // Nikkei
+        ctx.font = "40px Space Grotesk"
+        ctx.fillText(NikkeiPrice, 817, 820)
+
+        // Bitcoin
+        ctx.font = "40px Space Grotesk"
+        ctx.fillText(BitcoinPrice, 817, 1050)
+
+        // Ethereum
+        ctx.font = "40px Space Grotesk"
+        ctx.fillText(EthereumPrice, 842, 1098)
+
+        // Binance
+        ctx.font = "40px Space Grotesk"
+        ctx.fillText(BinancePrice, 860, 1146)
+
+        // Eregli
+        ctx.font = "40px Space Grotesk"
+        ctx.fillText(EregliPrice, 884, 1376)
+
+        // TOASA
+        ctx.font = "40px Space Grotesk"
+        ctx.fillText(TOASAPrice, 884, 1424)
+
+        // SASA
+        ctx.font = "40px Space Grotesk"
+        ctx.fillText(SASAPrice, 884, 1472)
+      })
+    })
+
+    function download(canvas, filename) {
+      var lnk = document.createElement('a'), e;
+      lnk.download = filename;
+      lnk.href = canvas.toDataURL("image/png;base64");
+      if (document.createEvent) {
+        e = document.createEvent("MouseEvents");
+        e.initMouseEvent("click", true, true, window,
+          0, 0, 0, 0, 0, false, false, false,
+          false, 0, null);
+
+        lnk.dispatchEvent(e);
+      } else if (lnk.fireEvent) {
+        lnk.fireEvent("onclick");
+      }
+    }
+
+    const date = new Date();
+    const yyyy = date.getFullYear();
+    let mm = date.getMonth() + 1; // Months start at 0!
+    let dd = date.getDate();
+
+    if (dd < 10) dd = '0' + dd;
+    if (mm < 10) mm = '0' + mm;
+
+    const today = dd + "." + mm + "." + yyyy
+
+    var save = document.getElementById("save").addEventListener("click", () => {
+      download(document.getElementById("canvas"), "Günün Piyasa Verileri " + today + ".png")
+    })
+  </script>
+</body>
+
+</html>
